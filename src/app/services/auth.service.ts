@@ -9,11 +9,10 @@ import { IUser, IAssessment } from '../interfaces/user.interface';
   providedIn: 'root',
 })
 export class AuthService {
-  private loggedIn = new BehaviorSubject<boolean>(false);
-  private isAdmin = false;
+  // private loggedIn = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) {
-    this.loggedIn.next(this.isAuthenticated());
+    //this.loggedIn.next(this.isAuthenticated());
     // this.isAdmin.next(this.hasAdminRole());
   }
 
@@ -25,26 +24,23 @@ export class AuthService {
     const params = new HttpParams()
       .set('email', email)
       .set('password', password);
-    if (email === 'admin' && password === 'password') {
-      this.loggedIn.next(true);
-      this.isAdmin = false;
-    }
-    return this.http.post<IUser>(`${API_URL}/api/login`, params);
+    return this.http.post<IUser>(`${API_URL}/api/login`, params, {
+      headers: { skip: 'true' },
+    });
   }
 
   public getToken(): string | null {
     return localStorage.getItem('token');
   }
 
-  // Check if the user is logged in
-  isLoggedIn(): Observable<boolean> {
-    return this.loggedIn.asObservable();
+  public isAdmin(): boolean {
+    return localStorage.getItem('role') === 'Admin';
   }
 
-  // Check if the user has the admin role
-  hasAdminRole(): boolean {
-    return this.isAdmin;
-  }
+  // Check if the user is logged in
+  // isLoggedIn(): Observable<boolean> {
+  //   return this.loggedIn.asObservable();
+  // }
 
   // Check if the user is authenticated (you can implement this based on your authentication mechanism)
   public isAuthenticated(): boolean {

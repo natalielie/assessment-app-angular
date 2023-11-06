@@ -8,7 +8,6 @@ import {
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { Store } from '@ngrx/store';
-import { selectToken } from '../store/selectors/assessments.selectors';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -18,9 +17,12 @@ export class TokenInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    if (request.headers.get('skip')) {
+      return next.handle(request);
+    }
     request = request.clone({
       setHeaders: {
-        'X-Token': `${this.store.select(selectToken)}`,
+        'X-Token': localStorage.getItem('token')!,
       },
     });
 

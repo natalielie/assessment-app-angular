@@ -29,10 +29,12 @@ export class ApiService {
     return this.http.get<IAssessment[]>(`${API_URL}/api/userassessments`);
   }
 
-  getAssessmentReport(assessmentId: number): Observable<IAssessmentReport[]> {
-    const params = new HttpParams().set('id', assessmentId);
-    return this.http.get<IAssessmentReport[]>(
-      `${API_URL}/api/userassessments/graph${params}`
+  getAssessmentReport(
+    assessmentId: string | null
+  ): Observable<IAssessmentReport> {
+    const params = new HttpParams().set('id', assessmentId!);
+    return this.http.get<IAssessmentReport>(
+      `${API_URL}/api/userassessments/graph?${params}`
     );
   }
 }
