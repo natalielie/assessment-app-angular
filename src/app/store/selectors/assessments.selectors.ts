@@ -1,20 +1,35 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { UserState } from '../reducers/assessments.reducers';
+import { GlobalState, UserState } from '../reducers/assessments.reducers';
 
-export const authFeature = createFeatureSelector<UserState>('auth');
+export const userFeature = createFeatureSelector<UserState>('userData');
 
 export const selectUserData = createSelector(
-  authFeature,
-  (state) => state.userData
+  userFeature,
+  (state) => state.user
 );
 
-export const selectIsAuth = createSelector(
-  authFeature,
-  (state) => !!state.userData!.token
+export const selectAllUsers = createSelector(
+  userFeature,
+  (state) => state.usersTotal
 );
 
-export const selectToken = createSelector(
-  authFeature,
-  (state) => state.userData!.token
+// export const selectIsAuth = createSelector(
+//   userFeature,
+//   (state) => !!state.user!.token
+// );
+
+// export const selectToken = createSelector(
+//   userFeature,
+//   (state) => state.user!.token
+// );
+
+export const selectAssessmentsData = createSelector(
+  userFeature,
+  (state) => state.assessments
+);
+
+export const selectAssessmentReport = createSelector(
+  userFeature,
+  (state) => state.assessmentReport
 );

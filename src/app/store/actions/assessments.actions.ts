@@ -1,55 +1,60 @@
 import { createAction, props } from '@ngrx/store';
-import { IAssessment, IUser } from 'src/app/interfaces/user.interface';
+import {
+  IAssessment,
+  IAssessmentReport,
+  IUser,
+} from 'src/app/interfaces/user.interface';
 
 export const login = createAction(
-  '[Cat Gallery] Login',
+  '[Assessment App] Login',
   props<{ email: string; password: string }>()
 );
 
 export const loginSuccess = createAction(
-  '[Cat Gallery] Login Success',
+  '[Assessment App] Login Success',
   props<{ userResponse: IUser }>()
 );
 
 export const loginError = createAction(
-  '[Cat Gallery] Login Error',
+  '[Assessment App] Login Error',
   props<{ error: string }>()
 );
 
-export const getAssessments = createAction('[Cat Gallery] Get Assessments');
+export const getAssessments = createAction('[Assessment App] Get Assessments');
 
 export const AssessmentsLoaded = createAction(
-  '[Cat Gallery] Assessments Loaded',
-  props<{ imageResponse: IAssessment[] }>()
+  '[Assessment App] Assessments Loaded',
+  props<{ assessmentResponse: IAssessment[] }>()
 );
 
 export const AssessmentsLoadError = createAction(
-  '[Cat Gallery] Assessments Not Loaded',
+  '[Assessment App] Assessments Not Loaded',
   props<{ error: string }>()
 );
 
-export const getAssessmentsDetails = createAction(
-  '[Cat Gallery] Get Assessments Details'
+export const getAssessmentReport = createAction(
+  '[Assessment App] Get Assessment Report',
+  props<{ assessmentId: string | null }>()
 );
 
-export const AssessmentsDetailsLoaded = createAction(
-  '[Cat Gallery] Assessments Details Loaded',
-  props<{ imageResponse: IAssessment[] }>()
+export const AssessmentReportLoaded = createAction(
+  '[Assessment App] Assessment Report Loaded',
+  props<{ reportResponse: IAssessmentReport }>()
 );
 
-export const AssessmentsDetailsLoadError = createAction(
-  '[Cat Gallery] Assessments Details Not Loaded',
+export const AssessmentReportLoadError = createAction(
+  '[Assessment App] Assessment Report Not Loaded',
   props<{ error: string }>()
 );
 
-export const getUsers = createAction('[Cat Gallery] Get All Users');
+export const getUsers = createAction('[Assessment App] Get All Users');
 
 export const UsersLoaded = createAction(
-  '[Cat Gallery] Users Loaded',
+  '[Assessment App] Users Loaded',
   props<{ userResponse: IUser[] }>()
 );
 
 export const UsersLoadError = createAction(
-  '[Cat Gallery] Users Not Loaded',
+  '[Assessment App] Users Not Loaded',
   props<{ error: string }>()
 );
