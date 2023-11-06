@@ -1,0 +1,69 @@
+.title-holder {
+  border-bottom: 2px solid #f2f2f2;
+  margin-bottom: 10px;
+}
+.table-holder {
+  padding: 20px 15px;
+  border-radius: 5px;
+  margin: 0 45px 0 45px;
+}
+.list-title {
+  font-size: 25px;
+  font-weight: bold;
+  line-height: normal;
+  letter-spacing: 0.5px;
+  margin: 5px;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.mat-header-cell {
+  padding: 20px;
+}
+
+.name-column {
+  width: 15%;
+}
+.last-name-column {
+  width: 20%;
+}
+.birth-column {
+  width: 15%;
+}
+.role-column {
+  width: 20%;
+}
+.education-column {
+  width: 20%;
+}
+.position-column {
+  width: 20%;
+}
+
+td {
+  text-align: center;
+  padding: 10px;
+}
+
+th {
+  text-align: center;
+  padding: 30px;
+}
+
+img {
+  width: 70%;
+  height: 90%;
+}
+
+mat-paginator {
+  position: relative;
+  float: right;
+  margin: 20px 40%;
+}
+
+.button-wrapper {
+  align-self: start;
+  margin: 10px;
+}

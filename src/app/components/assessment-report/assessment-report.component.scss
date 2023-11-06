@@ -1,0 +1,21 @@
+.container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.title-wrapper {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.canvas-wrapper {
+  width: 1000px;
+}
+
+.button-wrapper {
+  align-self: start;
+  margin: 10px;
+}

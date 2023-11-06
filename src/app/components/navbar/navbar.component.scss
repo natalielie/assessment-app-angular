@@ -8,5 +8,12 @@
   padding: 0 16px;
   align-items: center;
   height: 56px;
-  font: 500 20px/32px Roboto, "Helvetica Neue", sans-serif;
+  margin-left: -50px;
+  box-shadow: inset;
+}
+
+mat-toolbar {
+  background-color: 10px 5px 5px grey;
+  direction: rtl;
+  text-align: center;
 }

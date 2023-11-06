@@ -7,9 +7,13 @@ import {
   NonNullableFormBuilder,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject, takeUntil, tap, timer } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Subject, take, takeUntil, tap, timer } from 'rxjs';
 
 import { AuthService } from 'src/app/services/auth.service';
+import { UserState } from 'src/app/store/reducers/assessments.reducers';
+import * as UserActions from '../../store/actions/assessments.actions';
+import { selectUserData } from 'src/app/store/selectors/assessments.selectors';
 
 @Component({
   selector: 'app-login',
@@ -19,15 +23,13 @@ import { AuthService } from 'src/app/services/auth.service';
 export class LoginComponent implements OnInit {
   userLoginForm!: FormGroup;
   submitted = false;
-  /**
-   * A subject to prevent memory leaks
-   */
+  //userData$ = this.store.select(selectUserData);
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private formBuilder: NonNullableFormBuilder,
     private authService: AuthService,
-    private router: Router
+    private store: Store<UserState>
   ) {}
 
   ngOnInit() {
@@ -61,20 +63,12 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
     if (this.userLoginForm.valid) {
       const userValue = this.userLoginForm.getRawValue();
-      this.authService
-        .login(userValue.email, userValue.password)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (value) => {
-            console.log(value);
-            localStorage.setItem(
-              'currentUser',
-              JSON.stringify({ token: value.token, role: value.role })
-            );
-
-            this.router.navigate(['dashboard']);
-          },
-        });
+      this.store.dispatch(
+        UserActions.login({
+          email: userValue.email,
+          password: userValue.password,
+        })
+      );
     } else {
       alert('Something went wrong, try again, please');
     }
