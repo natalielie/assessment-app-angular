@@ -1,7 +1,10 @@
-<mat-toolbar>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="admin-user-list">Users</a>
+<mat-toolbar color="primary">
+  <nav class="navbar navbar-expand-lg">
+    <p>Assessments App</p>
+    <div *ngIf="isAdmin">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="admin-user-list">Users</a>
+      </div>
     </div>
   </nav>
 </mat-toolbar>

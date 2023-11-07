@@ -4,9 +4,9 @@ import { GlobalState, UserState } from '../reducers/assessments.reducers';
 
 export const userFeature = createFeatureSelector<UserState>('userData');
 
-export const selectUserData = createSelector(
+export const selectActiveUserData = createSelector(
   userFeature,
-  (state) => state.user
+  (state) => state
 );
 
 export const selectAllUsers = createSelector(

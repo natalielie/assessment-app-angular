@@ -20,6 +20,11 @@ export const loginError = createAction(
   props<{ error: string }>()
 );
 
+export const getActiveUser = createAction(
+  '[Assessment App] Get Active User',
+  props<{ userResponse: IUser }>()
+);
+
 export const getAssessments = createAction('[Assessment App] Get Assessments');
 
 export const AssessmentsLoaded = createAction(

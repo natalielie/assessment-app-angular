@@ -18,7 +18,7 @@ const routes: Routes = [
   {
     path: 'report/:id',
     component: AssessmentReportComponent,
-    //canActivate: [AdminGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: 'admin-user-list',

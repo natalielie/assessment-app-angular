@@ -60,6 +60,13 @@ export const userReducers = createReducer(
     };
     return result;
   }),
+  on(UserActions.getActiveUser, (state, { userResponse }) => {
+    const result = {
+      ...state,
+      user: userResponse,
+    };
+    return result;
+  }),
   on(UserActions.getAssessments, (state) => {
     const result = {
       ...state,

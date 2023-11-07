@@ -1,22 +1,33 @@
-.title-holder {
-  border-bottom: 2px solid #f2f2f2;
-  margin-bottom: 10px;
-}
 .table-holder {
   padding: 20px 15px;
   border-radius: 5px;
   margin: 0 45px 0 45px;
 }
+
+.mat-table {
+  display: table;
+  width: fit-content;
+}
+
+.table-wrapper {
+  width: fit-content;
+}
+
+.container.table {
+  width: max-content;
+}
+
 .list-title {
-  font-size: 25px;
+  font-size: 35px;
   font-weight: bold;
   line-height: normal;
   letter-spacing: 0.5px;
-  margin: 5px;
+  margin: -55px 0 30px 10px;
 }
 
-.mat-table {
+.title-wrapper {
   width: 100%;
+  margin-top: 70px;
 }
 
 .mat-header-cell {
@@ -57,7 +68,6 @@ img {
 }
 
 mat-paginator {
-  position: relative;
-  float: right;
-  margin: 20px 40%;
+  margin: 20px 28%;
+  position: absolute;
 }

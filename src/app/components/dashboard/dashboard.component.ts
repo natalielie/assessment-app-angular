@@ -7,10 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import * as UserActions from '../../store/actions/assessments.actions';
 import { GlobalState } from 'src/app/store/reducers/assessments.reducers';
 import { Store, select } from '@ngrx/store';
-import {
-  selectAssessmentsData,
-  selectUserData,
-} from 'src/app/store/selectors/assessments.selectors';
+import { selectAssessmentsData } from 'src/app/store/selectors/assessments.selectors';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -21,7 +18,6 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class DashboardComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  isAdmin!: boolean;
   displayedColumns: string[] = [
     'id',
     'name',
@@ -39,23 +35,10 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private store: Store<GlobalState>,
-    private authService: AuthService
+    private store: Store<GlobalState>
   ) {}
 
   ngOnInit(): void {
-    //this.isAdmin = this.apiService.hasAdminRole();
-    // this.dataSource.loadAssessments();
-
-    // const user$ = this.store.select(selectUserData);
-
-    // user$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
-    //   if (value?.role === 'admin') {
-    //     return (this.isAdmin = true);
-    //   } else return (this.isAdmin = false);
-    // });
-    this.isAdmin = this.authService.isAdmin();
-
     this.store.dispatch(UserActions.getAssessments());
     this.dataSource$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
       this.allDataSource = value!;
@@ -82,7 +65,7 @@ export class DashboardComponent implements OnInit {
     let index = 0,
       startingIndex = pagination.pageIndex * pagination.pageSize,
       endingIndex = startingIndex + pagination.pageSize;
-    this.dataSourcePerPage = this.allDataSource.filter(() => {
+    this.dataSourcePerPage = this.allDataSource!.filter(() => {
       index++;
       return index > startingIndex && index <= endingIndex ? true : false;
     });

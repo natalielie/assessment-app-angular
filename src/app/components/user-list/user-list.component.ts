@@ -21,7 +21,6 @@ import { Router } from '@angular/router';
 })
 export class UserListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  isAdmin!: boolean;
   displayedColumns: string[] = [
     'name',
     'lastName',
@@ -38,25 +37,9 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   $destroy: Subject<boolean> = new Subject<boolean>();
 
-  constructor(
-    private store: Store<GlobalState>,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private store: Store<GlobalState>, private router: Router) {}
 
   ngOnInit(): void {
-    //this.isAdmin = this.apiService.hasAdminRole();
-    // this.dataSource.loadAssessments();
-
-    // const user$ = this.store.select(selectUserData);
-
-    // user$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
-    //   if (value?.role === 'admin') {
-    //     return (this.isAdmin = true);
-    //   } else return (this.isAdmin = false);
-    // });
-    this.isAdmin = this.authService.isAdmin();
-
     this.store.dispatch(UserActions.getUsers());
     this.dataSource$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
       this.allDataSource = value!;

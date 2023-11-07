@@ -4,7 +4,10 @@ import { Store } from '@ngrx/store';
 
 import Chart from 'chart.js/auto';
 import { IAssessmentReport } from 'src/app/interfaces/user.interface';
-import { selectAssessmentReport } from 'src/app/store/selectors/assessments.selectors';
+import {
+  selectActiveUserData,
+  selectAssessmentReport,
+} from 'src/app/store/selectors/assessments.selectors';
 import * as UserActions from '../../store/actions/assessments.actions';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -20,7 +23,9 @@ export class AssessmentReportComponent
   assessmentId!: string | null;
   chart: any = [];
   reportData$ = this.store.select(selectAssessmentReport);
+  stateData$ = this.store.select(selectActiveUserData);
 
+  showData = false;
   $destroy: Subject<boolean> = new Subject<boolean>();
 
   constructor(
@@ -36,6 +41,14 @@ export class AssessmentReportComponent
     this.store.dispatch(
       UserActions.getAssessmentReport({ assessmentId: this.assessmentId })
     );
+
+    this.stateData$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
+      if (value.loading) {
+        this.showData = false;
+      } else {
+        this.showData = true;
+      }
+    });
 
     this.reportData$.pipe(takeUntil(this.$destroy)).subscribe((report) => {
       this.chart = new Chart('canvas', {

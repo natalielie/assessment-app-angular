@@ -11,7 +11,6 @@ import { AuthService } from '../services/auth.service';
 import { inject } from '@angular/core';
 import { LOGIN_ROUTE } from '../constants/constants';
 import { Store } from '@ngrx/store';
-import { selectUserData } from '../store/selectors/assessments.selectors';
 
 export const AdminGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,

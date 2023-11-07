@@ -13,7 +13,6 @@ import { Subject, take, takeUntil, tap, timer } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserState } from 'src/app/store/reducers/assessments.reducers';
 import * as UserActions from '../../store/actions/assessments.actions';
-import { selectUserData } from 'src/app/store/selectors/assessments.selectors';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +22,6 @@ import { selectUserData } from 'src/app/store/selectors/assessments.selectors';
 export class LoginComponent implements OnInit {
   userLoginForm!: FormGroup;
   submitted = false;
-  //userData$ = this.store.select(selectUserData);
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
@@ -34,7 +32,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.createForm();
-    //  this.authService.filterEventSource(this.filterEventEmitter)
   }
 
   ngOnDestroy() {
