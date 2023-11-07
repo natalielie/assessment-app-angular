@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { GlobalState, UserState } from '../reducers/assessments.reducers';
+import { UserState } from '../reducers/assessments.reducers';
 
 export const userFeature = createFeatureSelector<UserState>('userData');
 

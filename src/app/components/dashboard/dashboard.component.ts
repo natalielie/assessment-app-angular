@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subject, map, take, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { IAssessment } from 'src/app/interfaces/user.interface';
-import { ApiService } from 'src/app/services/api.service';
-import { AuthService } from 'src/app/services/auth.service';
 import * as UserActions from '../../store/actions/assessments.actions';
 import { GlobalState } from 'src/app/store/reducers/assessments.reducers';
-import { Store, select } from '@ngrx/store';
-import { selectAssessmentsData } from 'src/app/store/selectors/assessments.selectors';
-import { MatTableDataSource } from '@angular/material/table';
+import { Store } from '@ngrx/store';
+import {
+  selectActiveUserData,
+  selectAssessmentsData,
+} from 'src/app/store/selectors/assessments.selectors';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
@@ -31,14 +31,21 @@ export class DashboardComponent implements OnInit {
   page = 0;
   pageSize = 3;
 
+  showData = false;
+  stateData$ = this.store.select(selectActiveUserData);
+
   $destroy: Subject<boolean> = new Subject<boolean>();
 
-  constructor(
-    private apiService: ApiService,
-    private store: Store<GlobalState>
-  ) {}
+  constructor(private store: Store<GlobalState>) {}
 
   ngOnInit(): void {
+    this.stateData$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
+      if (value.loading) {
+        this.showData = false;
+      } else {
+        this.showData = true;
+      }
+    });
     this.store.dispatch(UserActions.getAssessments());
     this.dataSource$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
       this.allDataSource = value!;

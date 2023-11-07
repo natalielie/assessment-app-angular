@@ -1,20 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { API_URL } from '../shared/globals';
+import { IUser } from '../interfaces/user.interface';
 
-import { BehaviorSubject, Observable } from 'rxjs';
-import { IUser, IAssessment } from '../interfaces/user.interface';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  // private loggedIn = new BehaviorSubject<boolean>(false);
-
-  constructor(private http: HttpClient) {
-    //this.loggedIn.next(this.isAuthenticated());
-    // this.isAdmin.next(this.hasAdminRole());
-  }
+  constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<IUser[]> {
     return this.http.get<IUser[]>(`${API_URL}/api/users`);
@@ -36,11 +31,6 @@ export class AuthService {
   public isAdmin(): boolean {
     return localStorage.getItem('role') === 'Admin';
   }
-
-  // Check if the user is logged in
-  // isLoggedIn(): Observable<boolean> {
-  //   return this.loggedIn.asObservable();
-  // }
 
   // Check if the user is authenticated (you can implement this based on your authentication mechanism)
   public isAuthenticated(): boolean {

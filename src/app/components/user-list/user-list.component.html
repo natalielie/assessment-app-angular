@@ -1,3 +1,5 @@
+<app-navbar></app-navbar>
+
 <div class="button-wrapper">
   <button mat-raised-button (click)="returnBack()">Back</button>
 </div>
@@ -72,6 +74,15 @@
         [pageSizeOptions]="[3, 5, 10]"
         (page)="getDataForPagination($event)"
       ></mat-paginator>
+    </div>
+    <div class="spinner-wrapper" *ngIf="!showData">
+      <mat-progress-spinner
+        class="example-margin"
+        color="primary"
+        mode="indeterminate"
+        [diameter]="40"
+      >
+      </mat-progress-spinner>
     </div>
   </div>
 </div>

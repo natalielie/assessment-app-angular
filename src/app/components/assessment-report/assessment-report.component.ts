@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import Chart from 'chart.js/auto';
-import { IAssessmentReport } from 'src/app/interfaces/user.interface';
 import {
   selectActiveUserData,
   selectAssessmentReport,
@@ -16,9 +15,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './assessment-report.component.html',
   styleUrls: ['./assessment-report.component.scss'],
 })
-export class AssessmentReportComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+export class AssessmentReportComponent implements OnInit, OnDestroy {
   title = 'Assessment Report';
   assessmentId!: string | null;
   chart: any = [];
@@ -57,7 +54,7 @@ export class AssessmentReportComponent
           labels: Object.keys(report!.data),
           datasets: [
             {
-              //label: '# of Votes',
+              label: 'Rate',
               data: Object.values(report!.data),
               borderWidth: 1,
             },
@@ -73,8 +70,6 @@ export class AssessmentReportComponent
       });
     });
   }
-
-  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     this.$destroy.next(true);

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
 import { catchError, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import * as UserActions from '../actions/assessments.actions';
 import { ApiService } from 'src/app/services/api.service';

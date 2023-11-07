@@ -2,13 +2,11 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
 
-import { IAssessment, IUser } from 'src/app/interfaces/user.interface';
-import { ApiService } from 'src/app/services/api.service';
-import { AuthService } from 'src/app/services/auth.service';
+import { IUser } from 'src/app/interfaces/user.interface';
 import { GlobalState } from 'src/app/store/reducers/assessments.reducers';
 import {
+  selectActiveUserData,
   selectAllUsers,
-  selectAssessmentsData,
 } from 'src/app/store/selectors/assessments.selectors';
 import * as UserActions from '../../store/actions/assessments.actions';
 import { MatPaginator } from '@angular/material/paginator';
@@ -35,11 +33,22 @@ export class UserListComponent implements OnInit, OnDestroy {
   page = 0;
   pageSize = 5;
 
+  stateData$ = this.store.select(selectActiveUserData);
+  showData = false;
+
   $destroy: Subject<boolean> = new Subject<boolean>();
 
   constructor(private store: Store<GlobalState>, private router: Router) {}
 
   ngOnInit(): void {
+    this.stateData$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
+      if (value.loading) {
+        this.showData = false;
+      } else {
+        this.showData = true;
+      }
+    });
+
     this.store.dispatch(UserActions.getUsers());
     this.dataSource$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
       this.allDataSource = value!;

@@ -2,15 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormControl,
-  FormBuilder,
   Validators,
   NonNullableFormBuilder,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subject, take, takeUntil, tap, timer } from 'rxjs';
+import { Subject } from 'rxjs';
 
-import { AuthService } from 'src/app/services/auth.service';
 import { UserState } from 'src/app/store/reducers/assessments.reducers';
 import * as UserActions from '../../store/actions/assessments.actions';
 
@@ -22,11 +19,11 @@ import * as UserActions from '../../store/actions/assessments.actions';
 export class LoginComponent implements OnInit {
   userLoginForm!: FormGroup;
   submitted = false;
+
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private formBuilder: NonNullableFormBuilder,
-    private authService: AuthService,
     private store: Store<UserState>
   ) {}
 

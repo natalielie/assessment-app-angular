@@ -1,6 +1,7 @@
 import { DataSource } from '@angular/cdk/collections';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+
 import { IUser } from '../interfaces/user.interface';
 import { AuthService } from './auth.service';
 
