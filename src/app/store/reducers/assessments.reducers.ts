@@ -60,13 +60,6 @@ export const userReducers = createReducer(
     };
     return result;
   }),
-  on(UserActions.getActiveUser, (state, { userResponse }) => {
-    const result = {
-      ...state,
-      user: userResponse,
-    };
-    return result;
-  }),
   on(UserActions.getAssessments, (state) => {
     const result = {
       ...state,
@@ -143,32 +136,3 @@ export const userReducers = createReducer(
     return result;
   })
 );
-
-// export const assessmentReducers = createReducer(
-//   initialState,
-//   on(UserActions.getAssessments, (state) => {
-//     const result = {
-//       ...state,
-//       loading: true,
-//     };
-//     return result;
-//   }),
-//   on(UserActions.AssessmentsLoaded, (state, { assessmentResponse }) => {
-//     const result = {
-//       ...state,
-//       loading: false,
-//       assessments: assessmentResponse,
-//       error: null,
-//     };
-//     return result;
-//   }),
-//   on(UserActions.AssessmentsLoadError, (state, { error }) => {
-//     const result = {
-//       ...state,
-//       loading: false,
-//       userData: null,
-//       error: error,
-//     };
-//     return result;
-//   })
-// );

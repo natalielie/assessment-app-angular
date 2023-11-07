@@ -3,14 +3,17 @@ import {
   FormGroup,
   FormControl,
   Validators,
-  NonNullableFormBuilder,
+  FormBuilder,
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { UserState } from 'src/app/store/reducers/assessments.reducers';
 import * as UserActions from '../../store/actions/assessments.actions';
-
+import { selectActiveUserData } from 'src/app/store/selectors/assessments.selectors';
+/**
+ * a component of login page
+ */
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,12 +21,14 @@ import * as UserActions from '../../store/actions/assessments.actions';
 })
 export class LoginComponent implements OnInit {
   userLoginForm!: FormGroup;
-  submitted = false;
+
+  /** an observable of current user state data */
+  stateData$ = this.store.select(selectActiveUserData);
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    private formBuilder: NonNullableFormBuilder,
+    private formBuilder: FormBuilder,
     private store: Store<UserState>
   ) {}
 
@@ -40,6 +45,9 @@ export class LoginComponent implements OnInit {
     return this.userLoginForm.controls;
   }
 
+  /**
+   * create a form of email and password
+   */
   createForm() {
     this.userLoginForm = this.formBuilder.group({
       email: new FormControl<string>('', [
@@ -54,7 +62,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submitted = true;
     if (this.userLoginForm.valid) {
       const userValue = this.userLoginForm.getRawValue();
       this.store.dispatch(
@@ -63,6 +70,11 @@ export class LoginComponent implements OnInit {
           password: userValue.password,
         })
       );
+      this.stateData$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
+        if (value.error !== null) {
+          alert(value.error);
+        }
+      });
     } else {
       alert('Something went wrong, try again, please');
     }

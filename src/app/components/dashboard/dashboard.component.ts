@@ -11,6 +11,9 @@ import {
 } from 'src/app/store/selectors/assessments.selectors';
 import { MatPaginator } from '@angular/material/paginator';
 
+/**
+ *  a component of the main dashboard of assessments
+ */
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -25,31 +28,38 @@ export class DashboardComponent implements OnInit {
     'active',
     'image_url',
   ];
+  /** an observable of assessment data */
   dataSource$ = this.store.select(selectAssessmentsData);
-  dataSourcePerPage!: IAssessment[];
+
   allDataSource!: IAssessment[];
+  /** assessment data per one page of paginator */
+  dataSourcePerPage!: IAssessment[];
   page = 0;
   pageSize = 3;
 
   showData = false;
+  /** an observable of a current user state data */
   stateData$ = this.store.select(selectActiveUserData);
 
-  $destroy: Subject<boolean> = new Subject<boolean>();
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private store: Store<GlobalState>) {}
 
   ngOnInit(): void {
-    this.stateData$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
+    // get data about loading to show a spinner
+    this.stateData$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
       if (value.loading) {
         this.showData = false;
       } else {
         this.showData = true;
       }
     });
+    // get assessments
     this.store.dispatch(UserActions.getAssessments());
-    this.dataSource$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
+
+    this.dataSource$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
       this.allDataSource = value!;
-      // getting data for pagination
+      // get data for pagination
       this.getDataForPagination({
         pageIndex: this.page,
         pageSize: this.pageSize,
@@ -58,8 +68,8 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.$destroy.next(true);
-    this.$destroy.complete();
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   /**

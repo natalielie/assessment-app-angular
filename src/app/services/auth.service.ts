@@ -5,6 +5,9 @@ import { Observable } from 'rxjs';
 import { API_URL } from '../shared/globals';
 import { IUser } from '../interfaces/user.interface';
 
+/**
+ * a service of all authorization api requests
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -30,14 +33,5 @@ export class AuthService {
 
   public isAdmin(): boolean {
     return localStorage.getItem('role') === 'Admin';
-  }
-
-  // Check if the user is authenticated (you can implement this based on your authentication mechanism)
-  public isAuthenticated(): boolean {
-    // get the token
-    const token = this.getToken();
-    // return a boolean indicating whether or not the token is expired
-    // return tokenNotExpired(token);
-    return token !== null;
   }
 }

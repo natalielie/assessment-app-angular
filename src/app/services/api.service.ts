@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { API_URL } from '../shared/globals';
 import {
@@ -8,13 +8,14 @@ import {
   IAssessment,
   IAssessmentReport,
 } from '../interfaces/user.interface';
+
+/**
+ * a service of all api requests
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private loggedIn = new BehaviorSubject<boolean>(false);
-  private isAdmin = false;
-
   constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<IUser[]> {

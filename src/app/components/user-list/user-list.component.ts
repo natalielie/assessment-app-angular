@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
+import { MatPaginator } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import { IUser } from 'src/app/interfaces/user.interface';
 import { GlobalState } from 'src/app/store/reducers/assessments.reducers';
@@ -9,9 +11,10 @@ import {
   selectAllUsers,
 } from 'src/app/store/selectors/assessments.selectors';
 import * as UserActions from '../../store/actions/assessments.actions';
-import { MatPaginator } from '@angular/material/paginator';
-import { Router } from '@angular/router';
 
+/**
+ * a component of user list for an admin
+ */
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -36,12 +39,12 @@ export class UserListComponent implements OnInit, OnDestroy {
   stateData$ = this.store.select(selectActiveUserData);
   showData = false;
 
-  $destroy: Subject<boolean> = new Subject<boolean>();
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private store: Store<GlobalState>, private router: Router) {}
 
   ngOnInit(): void {
-    this.stateData$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
+    this.stateData$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
       if (value.loading) {
         this.showData = false;
       } else {
@@ -50,7 +53,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
 
     this.store.dispatch(UserActions.getUsers());
-    this.dataSource$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
+    this.dataSource$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
       this.allDataSource = value!;
       // getting data for pagination
       this.getDataForPagination({
@@ -61,8 +64,8 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.$destroy.next(true);
-    this.$destroy.complete();
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   /**

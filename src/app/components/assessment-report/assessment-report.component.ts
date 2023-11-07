@@ -10,20 +10,25 @@ import {
 import * as UserActions from '../../store/actions/assessments.actions';
 import { Subject, takeUntil } from 'rxjs';
 
+/**
+ *  a component of assessments report in detail (graphs)
+ */
 @Component({
   selector: 'app-assessment-report',
   templateUrl: './assessment-report.component.html',
   styleUrls: ['./assessment-report.component.scss'],
 })
 export class AssessmentReportComponent implements OnInit, OnDestroy {
-  title = 'Assessment Report';
   assessmentId!: string | null;
   chart: any = [];
+  /** an observable of assessment reports data */
   reportData$ = this.store.select(selectAssessmentReport);
+  /** an observable of current user state data */
   stateData$ = this.store.select(selectActiveUserData);
 
   showData = false;
-  $destroy: Subject<boolean> = new Subject<boolean>();
+
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private store: Store,
@@ -39,7 +44,7 @@ export class AssessmentReportComponent implements OnInit, OnDestroy {
       UserActions.getAssessmentReport({ assessmentId: this.assessmentId })
     );
 
-    this.stateData$.pipe(takeUntil(this.$destroy)).subscribe((value) => {
+    this.stateData$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
       if (value.loading) {
         this.showData = false;
       } else {
@@ -47,7 +52,7 @@ export class AssessmentReportComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.reportData$.pipe(takeUntil(this.$destroy)).subscribe((report) => {
+    this.reportData$.pipe(takeUntil(this.destroy$)).subscribe((report) => {
       this.chart = new Chart('canvas', {
         type: 'bar',
         data: {
@@ -72,8 +77,8 @@ export class AssessmentReportComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.$destroy.next(true);
-    this.$destroy.complete();
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   returnBack(): void {

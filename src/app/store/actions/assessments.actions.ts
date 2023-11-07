@@ -5,6 +5,7 @@ import {
   IUser,
 } from 'src/app/interfaces/user.interface';
 
+/** actions for login */
 export const login = createAction(
   '[Assessment App] Login',
   props<{ email: string; password: string }>()
@@ -20,11 +21,7 @@ export const loginError = createAction(
   props<{ error: string }>()
 );
 
-export const getActiveUser = createAction(
-  '[Assessment App] Get Active User',
-  props<{ userResponse: IUser }>()
-);
-
+/** actions for getting assessments */
 export const getAssessments = createAction('[Assessment App] Get Assessments');
 
 export const AssessmentsLoaded = createAction(
@@ -37,6 +34,7 @@ export const AssessmentsLoadError = createAction(
   props<{ error: string }>()
 );
 
+/** actions for getting assessment reports */
 export const getAssessmentReport = createAction(
   '[Assessment App] Get Assessment Report',
   props<{ assessmentId: string | null }>()
@@ -52,6 +50,7 @@ export const AssessmentReportLoadError = createAction(
   props<{ error: string }>()
 );
 
+/** actions for getting all users for an admin */
 export const getUsers = createAction('[Assessment App] Get All Users');
 
 export const UsersLoaded = createAction(

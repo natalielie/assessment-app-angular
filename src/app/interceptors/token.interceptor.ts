@@ -7,6 +7,9 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+/**
+ * an interceptor for adding a token to a header for every api request
+ */
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   constructor() {}

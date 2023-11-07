@@ -70,15 +70,15 @@
         (page)="getDataForPagination($event)"
       ></mat-paginator>
     </div>
+  </div>
 
-    <div class="spinner-wrapper" *ngIf="!showData">
-      <mat-progress-spinner
-        class="example-margin"
-        color="primary"
-        mode="indeterminate"
-        [diameter]="40"
-      >
-      </mat-progress-spinner>
-    </div>
+  <div class="spinner-wrapper" *ngIf="!showData">
+    <mat-progress-spinner
+      class="example-margin"
+      color="primary"
+      mode="indeterminate"
+      [diameter]="40"
+    >
+    </mat-progress-spinner>
   </div>
 </div>

@@ -28,7 +28,11 @@ export class UserAssessmentEffects {
           ),
           tap(() => this.router.navigate(['dashboard'])),
           catchError(() =>
-            of(UserActions.loginError({ error: 'Login failed' }))
+            of(
+              UserActions.loginError({
+                error: 'Your email or password is incorrect, try again',
+              })
+            )
           )
         );
       })
@@ -94,18 +98,4 @@ export class UserAssessmentEffects {
       })
     )
   );
-
-  // public loadFilteredImages$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(UserActions.getFilteredImages),
-  //     mergeMap((action) =>
-  //       this.catImageService.getCatsFilteredImages(action.filter).pipe(
-  //         map((response) =>
-  //           UserActions.imagesLoaded({ imageResponse: response })
-  //         ),
-  //         catchError((error) => EMPTY)
-  //       )
-  //     )
-  //   )
-  // );
 }

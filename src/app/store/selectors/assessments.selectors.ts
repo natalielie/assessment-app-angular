@@ -14,16 +14,6 @@ export const selectAllUsers = createSelector(
   (state) => state.usersTotal
 );
 
-// export const selectIsAuth = createSelector(
-//   userFeature,
-//   (state) => !!state.user!.token
-// );
-
-// export const selectToken = createSelector(
-//   userFeature,
-//   (state) => state.user!.token
-// );
-
 export const selectAssessmentsData = createSelector(
   userFeature,
   (state) => state.assessments
