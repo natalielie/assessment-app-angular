@@ -82,7 +82,7 @@ export class DashboardComponent implements OnInit {
     let index = 0,
       startingIndex = pagination.pageIndex * pagination.pageSize,
       endingIndex = startingIndex + pagination.pageSize;
-    this.dataSourcePerPage = this.allDataSource!.filter(() => {
+    this.dataSourcePerPage = this.allDataSource.filter(() => {
       index++;
       return index > startingIndex && index <= endingIndex ? true : false;
     });
