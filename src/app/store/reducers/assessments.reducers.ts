@@ -1,6 +1,9 @@
 import { createReducer, on } from '@ngrx/store';
 
-import * as UserActions from '../actions/assessments.actions';
+import * as UserActions from '../actions/users.actions';
+import * as AssessmentsActions from '../actions/assessments.actions';
+import * as AuthActions from '../actions/auth.actions';
+
 import {
   IAssessment,
   IAssessmentReport,
@@ -12,7 +15,6 @@ export interface UserState {
   assessments: IAssessment[] | null;
   assessmentReport: IAssessmentReport | null;
   usersTotal: IUser[] | null;
-  loading: boolean;
   error: string | null;
 }
 
@@ -25,7 +27,6 @@ const initialState: UserState = {
   assessments: null,
   assessmentReport: null,
   usersTotal: null,
-  loading: false,
   error: null,
 };
 
@@ -35,76 +36,64 @@ export const initialGlobalState: GlobalState = {
 
 export const userReducers = createReducer(
   initialState,
-  on(UserActions.login, (state, { email, password }) => {
+  on(AuthActions.login, (state, { email, password }) => {
     const result = {
       ...state,
-      loading: true,
     };
     return result;
   }),
-  on(UserActions.loginSuccess, (state, { userResponse }) => {
+  on(AuthActions.loginSuccess, (state, { userResponse }) => {
     const result = {
       ...state,
-      loading: false,
       user: userResponse,
-      error: null,
     };
     return result;
   }),
-  on(UserActions.loginError, (state, { error }) => {
+  on(AuthActions.loginError, (state, { error }) => {
     const result = {
       ...state,
-      loading: false,
       user: null,
       error: error,
     };
     return result;
   }),
-  on(UserActions.getAssessments, (state) => {
+  on(AssessmentsActions.getAssessments, (state) => {
     const result = {
       ...state,
-      loading: true,
     };
     return result;
   }),
-  on(UserActions.AssessmentsLoaded, (state, { assessmentResponse }) => {
+  on(AssessmentsActions.assessmentsLoaded, (state, { assessmentResponse }) => {
     const result = {
       ...state,
-      loading: false,
       assessments: assessmentResponse,
-      error: null,
     };
     return result;
   }),
-  on(UserActions.AssessmentsLoadError, (state, { error }) => {
+  on(AssessmentsActions.assessmentsLoadError, (state, { error }) => {
     const result = {
       ...state,
-      loading: false,
       assessments: null,
       error: error,
     };
     return result;
   }),
-  on(UserActions.getAssessmentReport, (state) => {
+  on(AssessmentsActions.getAssessmentReport, (state) => {
     const result = {
       ...state,
-      loading: true,
     };
     return result;
   }),
-  on(UserActions.AssessmentReportLoaded, (state, { reportResponse }) => {
+  on(AssessmentsActions.assessmentReportLoaded, (state, { reportResponse }) => {
     const result = {
       ...state,
-      loading: false,
       assessmentReport: reportResponse,
-      error: null,
     };
     return result;
   }),
-  on(UserActions.AssessmentReportLoadError, (state, { error }) => {
+  on(AssessmentsActions.assessmentReportLoadError, (state, { error }) => {
     const result = {
       ...state,
-      loading: false,
       assessmentReport: null,
       error: error,
     };
@@ -113,23 +102,19 @@ export const userReducers = createReducer(
   on(UserActions.getUsers, (state) => {
     const result = {
       ...state,
-      loading: true,
     };
     return result;
   }),
-  on(UserActions.UsersLoaded, (state, { userResponse }) => {
+  on(UserActions.usersLoaded, (state, { userResponse }) => {
     const result = {
       ...state,
-      loading: false,
       usersTotal: userResponse,
-      error: null,
     };
     return result;
   }),
-  on(UserActions.UsersLoadError, (state, { error }) => {
+  on(UserActions.usersLoadError, (state, { error }) => {
     const result = {
       ...state,
-      loading: false,
       usersTotal: null,
       error: error,
     };

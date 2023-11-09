@@ -2,63 +2,33 @@ import { createAction, props } from '@ngrx/store';
 import {
   IAssessment,
   IAssessmentReport,
-  IUser,
 } from 'src/app/interfaces/user.interface';
 
-/** actions for login */
-export const login = createAction(
-  '[Assessment App] Login',
-  props<{ email: string; password: string }>()
-);
-
-export const loginSuccess = createAction(
-  '[Assessment App] Login Success',
-  props<{ userResponse: IUser }>()
-);
-
-export const loginError = createAction(
-  '[Assessment App] Login Error',
-  props<{ error: string }>()
-);
-
 /** actions for getting assessments */
-export const getAssessments = createAction('[Assessment App] Get Assessments');
+export const getAssessments = createAction('[Assessments] Get Assessments');
 
-export const AssessmentsLoaded = createAction(
-  '[Assessment App] Assessments Loaded',
+export const assessmentsLoaded = createAction(
+  '[Assessments] Assessments Loaded',
   props<{ assessmentResponse: IAssessment[] }>()
 );
 
-export const AssessmentsLoadError = createAction(
-  '[Assessment App] Assessments Not Loaded',
+export const assessmentsLoadError = createAction(
+  '[Assessments] Assessments Not Loaded',
   props<{ error: string }>()
 );
 
 /** actions for getting assessment reports */
 export const getAssessmentReport = createAction(
-  '[Assessment App] Get Assessment Report',
-  props<{ assessmentId: string | null }>()
+  '[Assessments] Get Assessment Report',
+  props<{ assessmentId: number | null }>()
 );
 
-export const AssessmentReportLoaded = createAction(
-  '[Assessment App] Assessment Report Loaded',
+export const assessmentReportLoaded = createAction(
+  '[Assessments] Assessment Report Loaded',
   props<{ reportResponse: IAssessmentReport }>()
 );
 
-export const AssessmentReportLoadError = createAction(
-  '[Assessment App] Assessment Report Not Loaded',
-  props<{ error: string }>()
-);
-
-/** actions for getting all users for an admin */
-export const getUsers = createAction('[Assessment App] Get All Users');
-
-export const UsersLoaded = createAction(
-  '[Assessment App] Users Loaded',
-  props<{ userResponse: IUser[] }>()
-);
-
-export const UsersLoadError = createAction(
-  '[Assessment App] Users Not Loaded',
+export const assessmentReportLoadError = createAction(
+  '[Assessments] Assessment Report Not Loaded',
   props<{ error: string }>()
 );

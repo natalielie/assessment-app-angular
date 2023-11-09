@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
-import * as UserActions from '../actions/assessments.actions';
+import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import * as UserActions from '../actions/users.actions';
+import * as AssessmentsActions from '../actions/assessments.actions';
+import * as AuthActions from '../actions/auth.actions';
 import { ApiService } from 'src/app/services/api.service';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/auth/service/auth.service';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -18,18 +20,20 @@ export class UserAssessmentEffects {
 
   public login$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(UserActions.login),
+      ofType(AuthActions.login),
       mergeMap(({ email, password }) => {
         return this.authService.login(email, password).pipe(
-          tap((response) => localStorage.setItem('token', response.token)),
-          tap((response) => localStorage.setItem('role', response.role)),
+          tap((response) => {
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('role', response.role);
+            this.router.navigate(['dashboard']);
+          }),
           map((response) =>
-            UserActions.loginSuccess({ userResponse: response })
+            AuthActions.loginSuccess({ userResponse: response })
           ),
-          tap(() => this.router.navigate(['dashboard'])),
           catchError(() =>
             of(
-              UserActions.loginError({
+              AuthActions.loginError({
                 error: 'Your email or password is incorrect, try again',
               })
             )
@@ -41,15 +45,17 @@ export class UserAssessmentEffects {
 
   public getAssessments$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(UserActions.getAssessments),
+      ofType(AssessmentsActions.getAssessments),
       mergeMap(() => {
         return this.apiService.getAssessments().pipe(
           map((response) =>
-            UserActions.AssessmentsLoaded({ assessmentResponse: response })
+            AssessmentsActions.assessmentsLoaded({
+              assessmentResponse: response,
+            })
           ),
           catchError(() =>
             of(
-              UserActions.AssessmentsLoadError({
+              AssessmentsActions.assessmentsLoadError({
                 error: 'Assessments loading failed',
               })
             )
@@ -61,15 +67,17 @@ export class UserAssessmentEffects {
 
   public getAssessmentReport$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(UserActions.getAssessmentReport),
+      ofType(AssessmentsActions.getAssessmentReport),
       mergeMap((action) => {
         return this.apiService.getAssessmentReport(action.assessmentId).pipe(
           map((response) =>
-            UserActions.AssessmentReportLoaded({ reportResponse: response })
+            AssessmentsActions.assessmentReportLoaded({
+              reportResponse: response,
+            })
           ),
           catchError(() =>
             of(
-              UserActions.AssessmentReportLoadError({
+              AssessmentsActions.assessmentReportLoadError({
                 error: 'Assessment reports loading failed',
               })
             )
@@ -85,11 +93,11 @@ export class UserAssessmentEffects {
       mergeMap((action) => {
         return this.apiService.getAllUsers().pipe(
           map((response) =>
-            UserActions.UsersLoaded({ userResponse: response })
+            UserActions.usersLoaded({ userResponse: response })
           ),
           catchError(() =>
             of(
-              UserActions.UsersLoadError({
+              UserActions.usersLoadError({
                 error: 'Users loading failed',
               })
             )
