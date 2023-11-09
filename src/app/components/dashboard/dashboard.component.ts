@@ -5,10 +5,7 @@ import { IAssessment } from 'src/app/interfaces/user.interface';
 import * as UserActions from '../../store/actions/assessments.actions';
 import { GlobalState } from 'src/app/store/reducers/assessments.reducers';
 import { Store } from '@ngrx/store';
-import {
-  selectActiveUserData,
-  selectAssessmentsData,
-} from 'src/app/store/selectors/assessments.selectors';
+import { selectAssessmentsData } from 'src/app/store/selectors/app.selectors';
 import { MatPaginator } from '@angular/material/paginator';
 
 /**
@@ -34,35 +31,28 @@ export class DashboardComponent implements OnInit {
   allDataSource!: IAssessment[];
   /** assessment data per one page of paginator */
   dataSourcePerPage!: IAssessment[];
-  page = 0;
-  pageSize = 3;
-
-  showData = false;
-  /** an observable of a current user state data */
-  stateData$ = this.store.select(selectActiveUserData);
+  page = localStorage.getItem('currentDasboardPageIndex')
+    ? localStorage.getItem('currentDasboardPageIndex')
+    : 0;
+  pageSize = localStorage.getItem('currentDasboardPageSize')
+    ? localStorage.getItem('currentDasboardPageSize')
+    : 3;
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private store: Store<GlobalState>) {}
 
   ngOnInit(): void {
-    // get data about loading to show a spinner
-    this.stateData$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
-      if (value.loading) {
-        this.showData = false;
-      } else {
-        this.showData = true;
-      }
-    });
     // get assessments
     this.store.dispatch(UserActions.getAssessments());
 
     this.dataSource$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
       this.allDataSource = value!;
+
       // get data for pagination
       this.getDataForPagination({
-        pageIndex: this.page,
-        pageSize: this.pageSize,
+        pageIndex: +this.page!,
+        pageSize: +this.pageSize!,
       });
     });
   }
@@ -79,6 +69,14 @@ export class DashboardComponent implements OnInit {
    * from a user to manage pagination
    */
   getDataForPagination(pagination: { pageIndex: number; pageSize: number }) {
+    localStorage.setItem(
+      'currentDasboardPageIndex',
+      pagination.pageIndex.toString()
+    );
+    localStorage.setItem(
+      'currentDasboardPageSize',
+      pagination.pageSize.toString()
+    );
     let index = 0,
       startingIndex = pagination.pageIndex * pagination.pageSize,
       endingIndex = startingIndex + pagination.pageSize;

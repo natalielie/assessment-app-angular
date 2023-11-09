@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_URL } from '../shared/globals';
-import { IUser } from '../interfaces/user.interface';
+import { API_URL } from '../../shared/globals';
+import { IUser } from '../../interfaces/user.interface';
 
 /**
  * a service of all authorization api requests
@@ -13,10 +13,6 @@ import { IUser } from '../interfaces/user.interface';
 })
 export class AuthService {
   constructor(private http: HttpClient) {}
-
-  getAllUsers(): Observable<IUser[]> {
-    return this.http.get<IUser[]>(`${API_URL}/api/users`);
-  }
 
   login(email: string, password: string): Observable<IUser> {
     const params = new HttpParams()
@@ -33,5 +29,9 @@ export class AuthService {
 
   public isAdmin(): boolean {
     return localStorage.getItem('role') === 'Admin';
+  }
+
+  public isAuthorized(): boolean {
+    return this.getToken() !== null;
   }
 }

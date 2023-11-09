@@ -1,26 +1,38 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './auth/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { AuthGuard } from './guards/auth.guard';
+import { AuthGuard } from './auth/guard/auth.guard';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { AssessmentReportComponent } from './components/assessment-report/assessment-report.component';
 import { AdminGuard } from './guards/admin.guard';
+import {
+  adminPath,
+  dashboardPath,
+  loginPath,
+  reportPath,
+} from './shared/globals';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent },
+  { path: '', redirectTo: loginPath, pathMatch: 'full' },
   {
-    path: 'dashboard',
+    path: loginPath,
+    loadChildren: async () =>
+      (await import('./auth/lazy-loading/lazy-loading.module'))
+        .LazyLoadingModule,
+  },
+  {
+    path: dashboardPath,
     component: DashboardComponent,
     canActivate: [AuthGuard],
   },
   {
-    path: 'report/:id',
+    path: reportPath,
     component: AssessmentReportComponent,
     canActivate: [AuthGuard],
   },
   {
-    path: 'admin-user-list',
+    path: adminPath,
     component: UserListComponent,
     canActivate: [AdminGuard],
   },

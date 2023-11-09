@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/auth/service/auth.service';
 
 /**
  * a component of the navbar for all pages
@@ -18,11 +18,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
-    if (this.authService.getToken() !== null) {
-      this.isAuthorized = true;
-    } else {
-      this.isAuthorized = false;
-    }
+    this.isAuthorized = this.authService.isAuthorized();
   }
 
   logout(): void {

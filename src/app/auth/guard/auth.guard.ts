@@ -5,7 +5,8 @@ import {
   Router,
   CanActivateFn,
 } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../service/auth.service';
+import { loginPath } from '../../shared/globals';
 
 export const AuthGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
@@ -16,5 +17,5 @@ export const AuthGuard: CanActivateFn = (
 
   if (authService.getToken() !== null) {
     return true;
-  } else return router.navigate(['']);
+  } else return router.navigate([loginPath]);
 };

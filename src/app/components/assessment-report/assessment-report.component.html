@@ -11,15 +11,6 @@
   </div>
 
   <div class="canvas-wrapper">
-    <canvas id="canvas">{{ chart }}</canvas>
-  </div>
-  <div class="spinner-wrapper" *ngIf="!showData">
-    <mat-progress-spinner
-      class="example-margin"
-      color="primary"
-      mode="indeterminate"
-      [diameter]="40"
-    >
-    </mat-progress-spinner>
+    <canvas id="canvas" #canvas></canvas>
   </div>
 </div>

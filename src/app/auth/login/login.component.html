@@ -64,6 +64,15 @@
             >
               Password is required
             </mat-error>
+            <mat-error
+              *ngIf="
+                userLoginForm.controls['password'].errors &&
+                (userLoginForm.controls['password'].dirty ||
+                  userLoginForm.controls['password'].touched)
+              "
+            >
+              Password should be at least 8 characters
+            </mat-error>
 
             <div class="form-group" id="submit-button-div">
               <button

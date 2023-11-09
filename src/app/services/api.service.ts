@@ -27,7 +27,7 @@ export class ApiService {
   }
 
   getAssessmentReport(
-    assessmentId: string | null
+    assessmentId: number | null
   ): Observable<IAssessmentReport> {
     const params = new HttpParams().set('id', assessmentId!);
     return this.http.get<IAssessmentReport>(

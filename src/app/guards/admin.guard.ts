@@ -4,8 +4,9 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../auth/service/auth.service';
 import { inject } from '@angular/core';
+import { dashboardPath } from '../shared/globals';
 
 export const AdminGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
@@ -17,5 +18,5 @@ export const AdminGuard: CanActivateFn = (
   if (authService.isAdmin()) {
     return true;
   }
-  return router.navigate(['dashboard']);
+  return router.navigate([dashboardPath]);
 };

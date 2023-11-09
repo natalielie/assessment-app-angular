@@ -20,7 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './auth/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
@@ -34,6 +34,7 @@ import {
 import { EffectsModule } from '@ngrx/effects';
 import { UserAssessmentEffects } from './store/effects/assessments.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 const userReducerMap: ActionReducerMap<GlobalState> = {
   userData: userReducers,
@@ -47,6 +48,7 @@ const userReducerMap: ActionReducerMap<GlobalState> = {
     UserListComponent,
     NavbarComponent,
     AssessmentReportComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,

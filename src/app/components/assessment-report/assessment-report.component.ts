@@ -1,14 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import Chart from 'chart.js/auto';
-import {
-  selectActiveUserData,
-  selectAssessmentReport,
-} from 'src/app/store/selectors/assessments.selectors';
+import { selectAssessmentReport } from 'src/app/store/selectors/app.selectors';
 import * as UserActions from '../../store/actions/assessments.actions';
 import { Subject, takeUntil } from 'rxjs';
+import { dashboardPath } from 'src/app/shared/globals';
 
 /**
  *  a component of assessments report in detail (graphs)
@@ -19,14 +23,12 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./assessment-report.component.scss'],
 })
 export class AssessmentReportComponent implements OnInit, OnDestroy {
-  assessmentId!: string | null;
-  chart: any = [];
+  @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement> | undefined;
+
+  assessmentId!: number | null;
+  chart!: Chart;
   /** an observable of assessment reports data */
   reportData$ = this.store.select(selectAssessmentReport);
-  /** an observable of current user state data */
-  stateData$ = this.store.select(selectActiveUserData);
-
-  showData = false;
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -37,51 +39,47 @@ export class AssessmentReportComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      this.assessmentId = params.get('id');
-    });
+    this.assessmentId = +this.route.snapshot.params['id'] - 1;
     this.store.dispatch(
       UserActions.getAssessmentReport({ assessmentId: this.assessmentId })
     );
 
-    this.stateData$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
-      if (value.loading) {
-        this.showData = false;
-      } else {
-        this.showData = true;
-      }
-    });
-
     this.reportData$.pipe(takeUntil(this.destroy$)).subscribe((report) => {
-      this.chart = new Chart('canvas', {
-        type: 'bar',
-        data: {
-          labels: Object.keys(report!.data),
-          datasets: [
-            {
-              label: 'Rate',
-              data: Object.values(report!.data),
-              borderWidth: 1,
+      if (report && this.canvas) {
+        if (this.canvas?.nativeElement.getContext('2d')) {
+          this.chart?.destroy();
+          this.chart = new Chart('canvas', {
+            type: 'bar',
+            data: {
+              labels: Object.keys(report!.data),
+              datasets: [
+                {
+                  label: 'Rate',
+                  data: Object.values(report!.data),
+                  borderWidth: 1,
+                },
+              ],
             },
-          ],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                },
+              },
             },
-          },
-        },
-      });
+          });
+        }
+      }
     });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
+    this.chart?.destroy();
   }
 
   returnBack(): void {
-    this.router.navigate(['dashboard']);
+    this.router.navigate([dashboardPath]);
   }
 }

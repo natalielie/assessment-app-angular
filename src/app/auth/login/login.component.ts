@@ -6,11 +6,10 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { UserState } from 'src/app/store/reducers/assessments.reducers';
-import * as UserActions from '../../store/actions/assessments.actions';
-import { selectActiveUserData } from 'src/app/store/selectors/assessments.selectors';
+import * as UserActions from '../../store/actions/auth.actions';
 /**
  * a component of login page
  */
@@ -21,9 +20,6 @@ import { selectActiveUserData } from 'src/app/store/selectors/assessments.select
 })
 export class LoginComponent implements OnInit {
   userLoginForm!: FormGroup;
-
-  /** an observable of current user state data */
-  stateData$ = this.store.select(selectActiveUserData);
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -41,10 +37,6 @@ export class LoginComponent implements OnInit {
     this.destroy$.unsubscribe();
   }
 
-  get form() {
-    return this.userLoginForm.controls;
-  }
-
   /**
    * create a form of email and password
    */
@@ -56,7 +48,7 @@ export class LoginComponent implements OnInit {
       ]),
       password: new FormControl<string>('', [
         Validators.required,
-        Validators.minLength(6),
+        Validators.minLength(8),
       ]),
     });
   }
@@ -70,11 +62,6 @@ export class LoginComponent implements OnInit {
           password: userValue.password,
         })
       );
-      this.stateData$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
-        if (value.error !== null) {
-          alert(value.error);
-        }
-      });
     } else {
       alert('Something went wrong, try again, please');
     }

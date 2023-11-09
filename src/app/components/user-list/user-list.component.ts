@@ -6,11 +6,9 @@ import { Router } from '@angular/router';
 
 import { IUser } from 'src/app/interfaces/user.interface';
 import { GlobalState } from 'src/app/store/reducers/assessments.reducers';
-import {
-  selectActiveUserData,
-  selectAllUsers,
-} from 'src/app/store/selectors/assessments.selectors';
-import * as UserActions from '../../store/actions/assessments.actions';
+import { selectAllUsers } from 'src/app/store/selectors/app.selectors';
+import * as UserActions from '../../store/actions/users.actions';
+import { dashboardPath } from 'src/app/shared/globals';
 
 /**
  * a component of user list for an admin
@@ -33,32 +31,25 @@ export class UserListComponent implements OnInit, OnDestroy {
   dataSource$ = this.store.select(selectAllUsers);
   dataSourcePerPage!: IUser[];
   allDataSource!: IUser[];
-  page = 0;
-  pageSize = 5;
-
-  stateData$ = this.store.select(selectActiveUserData);
-  showData = false;
+  page = localStorage.getItem('currentUserPageIndex')
+    ? localStorage.getItem('currentUserPageIndex')
+    : 0;
+  pageSize = localStorage.getItem('currentUserPageSize')
+    ? localStorage.getItem('currentUserPageSize')
+    : 5;
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private store: Store<GlobalState>, private router: Router) {}
 
   ngOnInit(): void {
-    this.stateData$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
-      if (value.loading) {
-        this.showData = false;
-      } else {
-        this.showData = true;
-      }
-    });
-
     this.store.dispatch(UserActions.getUsers());
     this.dataSource$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
       this.allDataSource = value!;
       // getting data for pagination
       this.getDataForPagination({
-        pageIndex: this.page,
-        pageSize: this.pageSize,
+        pageIndex: +this.page!,
+        pageSize: +this.pageSize!,
       });
     });
   }
@@ -75,6 +66,11 @@ export class UserListComponent implements OnInit, OnDestroy {
    * from a user to manage pagination
    */
   getDataForPagination(pagination: { pageIndex: number; pageSize: number }) {
+    localStorage.setItem(
+      'currentUserPageIndex',
+      pagination.pageIndex.toString()
+    );
+    localStorage.setItem('currentUserPageSize', pagination.pageSize.toString());
     let index = 0,
       startingIndex = pagination.pageIndex * pagination.pageSize,
       endingIndex = startingIndex + pagination.pageSize;
@@ -85,6 +81,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   returnBack(): void {
-    this.router.navigate(['dashboard']);
+    this.router.navigate([dashboardPath]);
   }
 }
