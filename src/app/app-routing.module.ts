@@ -29,7 +29,7 @@ const routes: Routes = [
   {
     path: reportPath,
     component: AssessmentReportComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AssessmentGuard],
   },
   {
     path: adminPath,
