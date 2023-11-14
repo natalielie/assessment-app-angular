@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './auth/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { UserListComponent } from './components/user-list/user-list.component';
@@ -30,7 +29,7 @@ const routes: Routes = [
   {
     path: reportPath,
     component: AssessmentReportComponent,
-    canActivate: [AuthGuard, AssessmentGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: adminPath,
