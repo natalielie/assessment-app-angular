@@ -1,13 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
-import { MatPaginator } from '@angular/material/paginator';
-import { Router } from '@angular/router';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { IUser } from 'src/app/interfaces/user.interface';
-import { GlobalState } from 'src/app/store/reducers/assessments.reducers';
-import { selectAllUsers } from 'src/app/store/selectors/app.selectors';
-import * as UserActions from '../../store/actions/users.actions';
+import * as UserActions from '../../store/user/actions/users.actions';
+import { Location } from '@angular/common';
+import { MatTableDataSource } from '@angular/material/table';
+import { selectAllUsers } from 'src/app/store/user/selectors/user.selectors';
+import { AppState } from 'src/app/store/app.state';
+import { UserState } from 'src/app/store/user/user.state';
 import { dashboardPath } from 'src/app/shared/globals';
 
 /**
@@ -29,28 +32,36 @@ export class UserListComponent implements OnInit, OnDestroy {
     'position',
   ];
   dataSource$ = this.store.select(selectAllUsers);
-  dataSourcePerPage!: IUser[];
-  allDataSource!: IUser[];
-  page = localStorage.getItem('currentUserPageIndex')
-    ? localStorage.getItem('currentUserPageIndex')
-    : 0;
-  pageSize = localStorage.getItem('currentUserPageSize')
-    ? localStorage.getItem('currentUserPageSize')
-    : 5;
+  allDataSource = new MatTableDataSource<IUser>([]);
+  page =
+    Number.parseInt(
+      this.route.snapshot.queryParamMap.get('pageIndex') as string,
+      10
+    ) ?? 0;
+  pageSize =
+    Number.parseInt(
+      this.route.snapshot.queryParamMap.get('pageSize') as string,
+      10
+    ) ?? 5;
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store<GlobalState>, private router: Router) {}
+  constructor(
+    private store: Store<UserState>,
+    private router: Router,
+    private route: ActivatedRoute,
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
     this.store.dispatch(UserActions.getUsers());
     this.dataSource$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
-      this.allDataSource = value!;
-      // getting data for pagination
-      this.getDataForPagination({
-        pageIndex: +this.page!,
-        pageSize: +this.pageSize!,
-      });
+      this.allDataSource!.data = value;
+      if (this.paginator) {
+        this.paginator.pageIndex = this.page;
+        this.paginator.pageSize = this.pageSize;
+        this.allDataSource.paginator = this.paginator;
+      }
     });
   }
 
@@ -60,27 +71,25 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * getting data for pagination
-   *
-   * @param pagination page index and page size we get
-   * from a user to manage pagination
+   * updating page index and size of the paginator
    */
-  getDataForPagination(pagination: { pageIndex: number; pageSize: number }) {
-    localStorage.setItem(
-      'currentUserPageIndex',
-      pagination.pageIndex.toString()
-    );
-    localStorage.setItem('currentUserPageSize', pagination.pageSize.toString());
-    let index = 0,
-      startingIndex = pagination.pageIndex * pagination.pageSize,
-      endingIndex = startingIndex + pagination.pageSize;
-    this.dataSourcePerPage = this.allDataSource.filter(() => {
-      index++;
-      return index > startingIndex && index <= endingIndex ? true : false;
+  updateRouteParameters($event: PageEvent | null): void {
+    const params = {
+      pageIndex: this.paginator.pageIndex,
+      pageSize: this.paginator.pageSize,
+    };
+    console.log(event);
+    const urlTree = this.router.createUrlTree([], {
+      relativeTo: this.route,
+      queryParams: params,
+      queryParamsHandling: 'merge',
     });
+    //Update route with Query Params
+    this.location.go(urlTree.toString());
   }
 
   returnBack(): void {
-    this.router.navigate([dashboardPath]);
+    this.location.back();
+    this.router.navigate([dashboardPath], { queryParamsHandling: 'preserve' });
   }
 }

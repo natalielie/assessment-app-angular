@@ -9,10 +9,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import Chart from 'chart.js/auto';
-import { selectAssessmentReport } from 'src/app/store/selectors/app.selectors';
-import * as UserActions from '../../store/actions/assessments.actions';
+import * as UserActions from '../../store/user/actions/assessments.actions';
 import { Subject, takeUntil } from 'rxjs';
-import { dashboardPath } from 'src/app/shared/globals';
+import { Location } from '@angular/common';
+import { selectAssessmentReport } from 'src/app/store/user/selectors/user.selectors';
 
 /**
  *  a component of assessments report in detail (graphs)
@@ -35,7 +35,7 @@ export class AssessmentReportComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store,
     private route: ActivatedRoute,
-    private router: Router
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -80,6 +80,6 @@ export class AssessmentReportComponent implements OnInit, OnDestroy {
   }
 
   returnBack(): void {
-    this.router.navigate([dashboardPath]);
+    this.location.back();
   }
 }

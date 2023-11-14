@@ -14,7 +14,7 @@
     <div *ngIf="dataSource$ | async as dataSource" class="table-wrapper">
       <mat-table
         class="assess-table mat-elevation-z8"
-        [dataSource]="dataSourcePerPage"
+        [dataSource]="allDataSource"
       >
         <!-- First Name Column -->
         <ng-container matColumnDef="name">
@@ -70,9 +70,8 @@
 
       <mat-paginator
         [length]="dataSource.length"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="[3, 5, 10]"
-        (page)="getDataForPagination($event)"
+        [pageSizeOptions]="[5, 10, 15]"
+        (page)="updateRouteParameters($event)"
       ></mat-paginator>
     </div>
   </div>

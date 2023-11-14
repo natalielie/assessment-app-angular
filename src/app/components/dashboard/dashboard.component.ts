@@ -2,11 +2,15 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 import { IAssessment } from 'src/app/interfaces/user.interface';
-import * as UserActions from '../../store/actions/assessments.actions';
-import { GlobalState } from 'src/app/store/reducers/assessments.reducers';
+import * as UserActions from '../../store/user/actions/assessments.actions';
 import { Store } from '@ngrx/store';
-import { selectAssessmentsData } from 'src/app/store/selectors/app.selectors';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { MatTableDataSource } from '@angular/material/table';
+import { selectAssessmentsData } from 'src/app/store/user/selectors/user.selectors';
+import { AppState } from 'src/app/store/app.state';
+import { UserState } from 'src/app/store/user/user.state';
 
 /**
  *  a component of the main dashboard of assessments
@@ -27,33 +31,39 @@ export class DashboardComponent implements OnInit {
   ];
   /** an observable of assessment data */
   dataSource$ = this.store.select(selectAssessmentsData);
-
-  allDataSource!: IAssessment[];
-  /** assessment data per one page of paginator */
-  dataSourcePerPage!: IAssessment[];
-  page = localStorage.getItem('currentDasboardPageIndex')
-    ? localStorage.getItem('currentDasboardPageIndex')
-    : 0;
-  pageSize = localStorage.getItem('currentDasboardPageSize')
-    ? localStorage.getItem('currentDasboardPageSize')
-    : 3;
+  allDataSource = new MatTableDataSource<IAssessment>([]);
+  page =
+    Number.parseInt(
+      this.route.snapshot.queryParamMap.get('pageIndex') as string,
+      10
+    ) ?? 0;
+  pageSize =
+    Number.parseInt(
+      this.route.snapshot.queryParamMap.get('pageSize') as string,
+      10
+    ) ?? 3;
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store<GlobalState>) {}
+  constructor(
+    private store: Store<UserState>,
+    private router: Router,
+    private route: ActivatedRoute,
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
     // get assessments
     this.store.dispatch(UserActions.getAssessments());
 
     this.dataSource$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
-      this.allDataSource = value!;
+      this.allDataSource!.data = value;
 
-      // get data for pagination
-      this.getDataForPagination({
-        pageIndex: +this.page!,
-        pageSize: +this.pageSize!,
-      });
+      if (this.paginator) {
+        this.paginator.pageIndex = this.page;
+        this.paginator.pageSize = this.pageSize;
+        this.allDataSource.paginator = this.paginator;
+      }
     });
   }
 
@@ -63,26 +73,19 @@ export class DashboardComponent implements OnInit {
   }
 
   /**
-   * getting data for pagination
-   *
-   * @param pagination page index and page size we get
-   * from a user to manage pagination
+   * updating page index and size of the paginator
    */
-  getDataForPagination(pagination: { pageIndex: number; pageSize: number }) {
-    localStorage.setItem(
-      'currentDasboardPageIndex',
-      pagination.pageIndex.toString()
-    );
-    localStorage.setItem(
-      'currentDasboardPageSize',
-      pagination.pageSize.toString()
-    );
-    let index = 0,
-      startingIndex = pagination.pageIndex * pagination.pageSize,
-      endingIndex = startingIndex + pagination.pageSize;
-    this.dataSourcePerPage = this.allDataSource.filter(() => {
-      index++;
-      return index > startingIndex && index <= endingIndex ? true : false;
+  updateRouteParameters($event: PageEvent | null): void {
+    const params = {
+      pageIndex: this.paginator.pageIndex,
+      pageSize: this.paginator.pageSize,
+    };
+    const urlTree = this.router.createUrlTree([], {
+      relativeTo: this.route,
+      queryParams: params,
+      queryParamsHandling: 'merge',
     });
+    //Update route with Query Params
+    this.location.go(urlTree.toString());
   }
 }
