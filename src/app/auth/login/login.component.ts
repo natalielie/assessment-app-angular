@@ -8,8 +8,9 @@ import {
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 
-import { UserState } from 'src/app/store/reducers/assessments.reducers';
-import * as UserActions from '../../store/actions/auth.actions';
+import * as UserActions from '../../store/auth/actions/auth.actions';
+import { AppState } from 'src/app/store/app.state';
+import { AuthState } from 'src/app/store/auth/auth.state';
 /**
  * a component of login page
  */
@@ -25,10 +26,11 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private store: Store<UserState>
+    private store: Store<AuthState>
   ) {}
 
   ngOnInit() {
+    localStorage.clear();
     this.createForm();
   }
 

@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import * as UserActions from '../actions/users.actions';
 import * as AssessmentsActions from '../actions/assessments.actions';
-import * as AuthActions from '../actions/auth.actions';
+import * as AuthActions from '../../auth/actions/auth.actions';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/auth/service/auth.service';
 import { Router } from '@angular/router';
@@ -17,31 +17,6 @@ export class UserAssessmentEffects {
     private apiService: ApiService,
     private router: Router
   ) {}
-
-  public login$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.login),
-      mergeMap(({ email, password }) => {
-        return this.authService.login(email, password).pipe(
-          tap((response) => {
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('role', response.role);
-            this.router.navigate(['dashboard']);
-          }),
-          map((response) =>
-            AuthActions.loginSuccess({ userResponse: response })
-          ),
-          catchError(() =>
-            of(
-              AuthActions.loginError({
-                error: 'Your email or password is incorrect, try again',
-              })
-            )
-          )
-        );
-      })
-    )
-  );
 
   public getAssessments$ = createEffect(() =>
     this.actions$.pipe(

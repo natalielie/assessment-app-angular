@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/auth/service/auth.service';
 import { Router } from '@angular/router';
 
 @Injectable()
-export class UserAssessmentEffects {
+export class AuthEffects {
   constructor(
     private actions$: Actions,
     private authService: AuthService,

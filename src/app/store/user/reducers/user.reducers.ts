@@ -2,61 +2,10 @@ import { createReducer, on } from '@ngrx/store';
 
 import * as UserActions from '../actions/users.actions';
 import * as AssessmentsActions from '../actions/assessments.actions';
-import * as AuthActions from '../actions/auth.actions';
-
-import {
-  IAssessment,
-  IAssessmentReport,
-  IUser,
-} from 'src/app/interfaces/user.interface';
-
-export interface UserState {
-  user: IUser | null;
-  assessments: IAssessment[] | null;
-  assessmentReport: IAssessmentReport | null;
-  usersTotal: IUser[] | null;
-  error: string | null;
-}
-
-export interface GlobalState {
-  userData: UserState;
-}
-
-const initialState: UserState = {
-  user: null,
-  assessments: null,
-  assessmentReport: null,
-  usersTotal: null,
-  error: null,
-};
-
-export const initialGlobalState: GlobalState = {
-  userData: initialState,
-};
+import { UserState, userInitialState } from '../user.state';
 
 export const userReducers = createReducer(
-  initialState,
-  on(AuthActions.login, (state, { email, password }) => {
-    const result = {
-      ...state,
-    };
-    return result;
-  }),
-  on(AuthActions.loginSuccess, (state, { userResponse }) => {
-    const result = {
-      ...state,
-      user: userResponse,
-    };
-    return result;
-  }),
-  on(AuthActions.loginError, (state, { error }) => {
-    const result = {
-      ...state,
-      user: null,
-      error: error,
-    };
-    return result;
-  }),
+  userInitialState,
   on(AssessmentsActions.getAssessments, (state) => {
     const result = {
       ...state,
@@ -73,7 +22,7 @@ export const userReducers = createReducer(
   on(AssessmentsActions.assessmentsLoadError, (state, { error }) => {
     const result = {
       ...state,
-      assessments: null,
+      assessments: [],
       error: error,
     };
     return result;
@@ -91,14 +40,14 @@ export const userReducers = createReducer(
     };
     return result;
   }),
-  on(AssessmentsActions.assessmentReportLoadError, (state, { error }) => {
-    const result = {
-      ...state,
-      assessmentReport: null,
-      error: error,
-    };
-    return result;
-  }),
+  // on(AssessmentsActions.assessmentReportLoadError, (state, { error }) => {
+  //   const result = {
+  //     ...state,
+  //     assessmentReport: [],
+  //     error: error,
+  //   };
+  //   return result;
+  // }),
   on(UserActions.getUsers, (state) => {
     const result = {
       ...state,
@@ -115,7 +64,7 @@ export const userReducers = createReducer(
   on(UserActions.usersLoadError, (state, { error }) => {
     const result = {
       ...state,
-      usersTotal: null,
+      usersTotal: [],
       error: error,
     };
     return result;

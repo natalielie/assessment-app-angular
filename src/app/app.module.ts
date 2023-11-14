@@ -26,19 +26,13 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AssessmentReportComponent } from './components/assessment-report/assessment-report.component';
-import { ActionReducerMap, StoreModule } from '@ngrx/store';
-import {
-  GlobalState,
-  userReducers,
-} from './store/reducers/assessments.reducers';
+import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { UserAssessmentEffects } from './store/effects/assessments.effects';
+import { UserAssessmentEffects } from './store/user/effects/user.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { SpinnerComponent } from './components/spinner/spinner.component';
-
-const userReducerMap: ActionReducerMap<GlobalState> = {
-  userData: userReducers,
-};
+import { appReducers } from './store/app.state';
+import { AuthEffects } from './store/auth/effects/auth.effects';
 
 @NgModule({
   declarations: [
@@ -67,8 +61,8 @@ const userReducerMap: ActionReducerMap<GlobalState> = {
     MatCardModule,
     MatButtonModule,
     MatToolbarModule,
-    StoreModule.forRoot(userReducerMap),
-    EffectsModule.forRoot([UserAssessmentEffects]),
+    StoreModule.forRoot(appReducers),
+    EffectsModule.forRoot([UserAssessmentEffects, AuthEffects]),
     StoreDevtoolsModule.instrument({}),
     MatProgressSpinnerModule,
   ],

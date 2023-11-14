@@ -12,6 +12,7 @@ import {
   loginPath,
   reportPath,
 } from './shared/globals';
+import { AssessmentGuard } from './guards/assessment.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: loginPath, pathMatch: 'full' },
@@ -29,7 +30,7 @@ const routes: Routes = [
   {
     path: reportPath,
     component: AssessmentReportComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AssessmentGuard],
   },
   {
     path: adminPath,
