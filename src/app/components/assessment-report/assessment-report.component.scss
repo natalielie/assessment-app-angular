@@ -1,0 +1,30 @@
+.container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.canvas-wrapper {
+  width: 1000px;
+}
+
+.button-wrapper {
+  align-self: start;
+  margin-left: -80px;
+  margin-top: 30px;
+}
+
+.list-title {
+  font-size: 35px;
+  font-weight: bold;
+  line-height: normal;
+  letter-spacing: 0.5px;
+  margin: -55px 0 30px 10px;
+}
+
+.title-wrapper {
+  width: 100%;
+  margin-top: 20px;
+}

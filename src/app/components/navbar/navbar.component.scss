@@ -1,0 +1,37 @@
+nav {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  color: #fff;
+  display: flex;
+  padding: 0 16px;
+  align-items: center;
+  height: 56px;
+  box-shadow: inset;
+}
+
+mat-toolbar {
+  background-color: 10px 5px 5px;
+  color: white;
+  text-align: center;
+}
+p {
+  margin-left: 30px;
+  margin-top: 15px;
+}
+
+a {
+  color: #fff;
+  right: 0;
+  float: right;
+  margin-left: 50px;
+}
+
+.container-fluid {
+  display: flex;
+}
+
+.container-right {
+  position: absolute;
+  right: 0px;
+}
