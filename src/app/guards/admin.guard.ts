@@ -8,10 +8,7 @@ import { AuthService } from '../auth/service/auth.service';
 import { inject } from '@angular/core';
 import { dashboardPath } from '../shared/globals';
 
-export const AdminGuard: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
-) => {
+export const AdminGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
